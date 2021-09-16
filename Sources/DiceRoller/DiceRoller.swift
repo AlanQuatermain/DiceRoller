@@ -31,10 +31,34 @@ extension Expression {
             return .braced(expr.rolled())
         }
     }
+
+    public func collectRolls() -> [[RollResult]] {
+        switch self {
+        case .number, .error, .roll:
+            return []
+        case let .result(rolls):
+            return [rolls]
+        case let .braced(expr):
+            return expr.collectRolls()
+        case let .addition(lhs, rhs), let .subtraction(lhs, rhs),
+                let .multiplication(lhs, rhs), let .division(lhs, rhs),
+                let .modulus(lhs, rhs), let .power(lhs, rhs):
+            return lhs.collectRolls() + rhs.collectRolls()
+        }
+    }
 }
 
+/// Provides the implementation of the dice expression parser and roller.
+///
+/// While it is entirely possible to use the `Dice`, `Roll`, and `Modifier`
+/// types directly to construct dice chains and determine results, the simplest
+/// and most direct route is to provide a dice expression as a `String`. This
+/// class encapsulates the dice expression parser and rolls for you, providing
+/// results in a variety of different formats.
 public class DiceRoller {
+    /// Errors that may occur while parsing.
     public enum Error: Swift.Error {
+        /// An error occurred when
         case tokenizationError(String.Index)
         case unexpectedToken(String)
         case unexpectedEOF
@@ -79,6 +103,11 @@ public class DiceRoller {
         catch {
             throw Error.unknown(error)
         }
+    }
+
+    public func roll(input: String) throws -> [[RollResult]] {
+        let expression = try decodeExpression(from: input)
+        return expression.rolled().collectRolls()
     }
 
     public func parse(input: String) throws -> (input: String, rolled: String, value: Int) {

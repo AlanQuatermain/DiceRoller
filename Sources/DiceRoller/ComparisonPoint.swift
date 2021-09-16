@@ -92,3 +92,6 @@ extension ComparisonPoint: CustomStringConvertible {
         }
     }
 }
+
+extension Comparison: Equatable {}
+extension ComparisonPoint: Equatable {}

@@ -134,3 +134,44 @@ extension Roll: CustomStringConvertible {
         "\(dice)\(modifiers.map(\.description).joined())"
     }
 }
+
+extension Dice: Equatable, Comparable {
+    public static func < (lhs: Dice, rhs: Dice) -> Bool {
+        let lRange = lhs.rollRange
+        let rRange = rhs.rollRange
+        if lRange.lowerBound < rRange.lowerBound {
+            return true
+        }
+        if lRange.lowerBound > rRange.lowerBound {
+            return false
+        }
+        if lRange.upperBound < rRange.upperBound {
+            return true
+        }
+        return false
+    }
+}
+
+extension Roll: Equatable, Comparable {
+    public static func == (lhs: Roll, rhs: Roll) -> Bool {
+        if lhs.dice != rhs.dice { return false }
+        if lhs.modifiers.isEmpty && rhs.modifiers.isEmpty { return true }
+        if lhs.modifiers.count != rhs.modifiers.count { return false }
+
+        // cheap & cheerful
+        let lMods = lhs.modifiers.ordered().map(\.description).joined()
+        let rMods = rhs.modifiers.ordered().map(\.description).joined()
+        return lMods == rMods
+    }
+
+    public static func < (lhs: Roll, rhs: Roll) -> Bool {
+        if lhs.dice != rhs.dice { return lhs.dice < rhs.dice }
+        if lhs.modifiers.count != rhs.modifiers.count {
+            return lhs.modifiers.count < rhs.modifiers.count
+        }
+
+        let lMods = lhs.modifiers.ordered().map(\.description).joined()
+        let rMods = rhs.modifiers.ordered().map(\.description).joined()
+        return lMods < rMods
+    }
+}

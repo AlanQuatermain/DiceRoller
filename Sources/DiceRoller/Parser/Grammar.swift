@@ -46,19 +46,19 @@ class DiceRollParser: CitronParser {
       case Modulo                         =  19
       case Power                          =  20
       case Die                            =  21
-      case Integer                        =  22
-      case Percent                        =  23
-      case Fudge                          =  24
-      case FateSides                      =  25
-      case Fail                           =  26
-      case KeepHigh                       =  27
-      case KeepLow                        =  28
-      case DropLow                        =  29
-      case DropHigh                       =  30
-      case Min                            =  31
-      case Max                            =  32
-      case SortAscending                  =  33
-      case SortDescending                 =  34
+      case Fail                           =  22
+      case KeepHigh                       =  23
+      case Integer                        =  24
+      case KeepLow                        =  25
+      case DropLow                        =  26
+      case DropHigh                       =  27
+      case Min                            =  28
+      case Max                            =  29
+      case SortAscending                  =  30
+      case SortDescending                 =  31
+      case StandardDie                    =  32
+      case PercentageDie                  =  33
+      case FudgeDie                       =  34
       case OpenParen                      =  35
       case CloseParen                     =  36
     }
@@ -67,11 +67,11 @@ class DiceRollParser: CitronParser {
       case expr                           =  37
       case expr_list                      =  38
       case root                           =  39
-      case dice                           =  40
-      case roll                           =  41
-      case modifier_list                  =  42
-      case modifier                       =  43
-      case compare_point                  =  44
+      case modifier                       =  40
+      case modifier_list                  =  41
+      case compare_point                  =  42
+      case dice                           =  43
+      case roll                           =  44
     }
 
     enum CitronSymbolCode : RawRepresentable, Equatable {
@@ -136,64 +136,62 @@ class DiceRollParser: CitronParser {
     // Counts
 
     let yyNumberOfSymbols: Int = 45
-    let yyNumberOfStates: Int = 42
+    let yyNumberOfStates: Int = 39
 
     // Action tables
 
     let yyLookaheadAction: [(CitronSymbolNumber, CitronParsingAction)] = [
-/*   0 */  ( 1, .SH(17)), ( 2, .SH(16)), ( 3, .SH(15)), ( 4, .SH(13)), ( 5, .SH(12)),
-/*   5 */  ( 6, .SH(11)), ( 7, .SH(10)), (44, .RD(28)), ( 9, .SH(39)), (10, .SH(38)),
-/*  10 */  (11, .SH(37)), (12, .SH(36)), (13, .SH(35)), (14, .SH(34)), (44, .RD(27)),
+/*   0 */  ( 1, .SH(12)), ( 2, .SH(11)), ( 3, .SH(10)), ( 4, .SH(16)), ( 5, .SH(15)),
+/*   5 */  ( 6, .SH(14)), ( 7, .SH(13)), (42, .RD(25)), ( 9, .SH(37)), (10, .SH(36)),
+/*  10 */  (11, .SH(35)), (12, .SH(34)), (13, .SH(33)), (14, .SH(32)), (42, .RD(23)),
 /*  15 */  (15, .SH( 9)), (16, .SH( 8)), (17, .SH( 7)), (18, .SH( 6)), (19, .SH( 5)),
-/*  20 */  (20, .SH( 4)), (37, .SH(19)), (44, .RD(26)), (39, .ACCEPT),   (40, .SH( 2)),
-/*  25 */  (41, .RD(38)), (27, .SH(32)), (28, .SH(31)), (29, .SH(30)), (30, .SH(29)),
-/*  30 */  (31, .SH(28)), (32, .SH(27)), (33, .SR(29)), (34, .SR(30)), ( 0, .RD( 0)),
-/*  35 */  (44, .RD(24)), (36, .SR(39)), ( 9, .SH(39)), (10, .SH(38)), (11, .SH(37)),
-/*  40 */  (12, .SH(36)), (13, .SH(35)), (14, .SH(34)), (17, .SH( 7)), (18, .SH( 6)),
-/*  45 */  (19, .SH( 5)), (20, .SH( 4)), (44, .RD(14)), (44, .RD(12)), (15, .SH( 9)),
-/*  50 */  (16, .SH( 8)), (17, .SH( 7)), (18, .SH( 6)), (19, .SH( 5)), (20, .SH( 4)),
-/*  55 */  (42, .RD(41)), (43, .SH( 1)), (44, .SH(33)), (42, .RD( 6)), (43, .SH( 1)),
-/*  60 */  (44, .SH(33)), (37, .SH(18)), (22, .SH(41)), (44, .RD(10)), (40, .SH( 2)),
-/*  65 */  (41, .RD(38)), (37, .SH(23)), (44, .RD( 8)), (37, .SH(24)), (40, .SH( 2)),
-/*  70 */  (41, .RD(38)), (40, .SH( 2)), (41, .RD(38)), (20, .SH( 4)), (37, .SH(25)),
-/*  75 */  (35, .SH( 3)), (37, .SH(26)), (40, .SH( 2)), (41, .RD(38)), (40, .SH( 2)),
-/*  80 */  (41, .RD(38)), (37, .SH(20)), (22, .SR(22)), (37, .SH(21)), (40, .SH( 2)),
-/*  85 */  (41, .RD(38)), (40, .SH( 2)), (41, .RD(38)), (22, .SR( 1)), (23, .SR( 2)),
-/*  90 */  (24, .SH(40)), (22, .SR(21)), (22, .SR(19)), (22, .SR(20)), (22, .SR(17)),
-/*  95 */  (22, .SR(16)), (45, .RD( 2)), (22, .SR(47)), (22, .SR(46)), (22, .SR(45)),
-/* 100 */  (26, .SH(14)), (22, .SR(44)), (22, .SR(43)), (22, .SR(42)), (21, .SH(22)),
-/* 105 */  (45, .RD( 2)), (45, .RD( 2)), (25, .SR( 4)),
+/*  20 */  (20, .SH( 4)), (42, .RD(21)), (23, .SH(31)), ( 0, .RD( 0)), (25, .SH(30)),
+/*  25 */  (26, .SH(29)), (27, .SH(28)), (28, .SH(27)), (29, .SH(26)), (30, .SR(19)),
+/*  30 */  (31, .SR(20)), (17, .SH( 7)), (18, .SH( 6)), (19, .SH( 5)), (20, .SH( 4)),
+/*  35 */  (42, .RD(18)), (36, .SR(40)), (42, .RD(17)), (15, .SH( 9)), (16, .SH( 8)),
+/*  40 */  (17, .SH( 7)), (18, .SH( 6)), (19, .SH( 5)), (20, .SH( 4)), (24, .SR(38)),
+/*  45 */  (42, .RD(15)), ( 9, .SH(37)), (10, .SH(36)), (11, .SH(35)), (12, .SH(34)),
+/*  50 */  (13, .SH(33)), (14, .SH(32)), (32, .SR(27)), (33, .SR(28)), (34, .SR(29)),
+/*  55 */  (35, .SH( 3)), (37, .SH(19)), (42, .RD(13)), (39, .ACCEPT),   (42, .RD( 1)),
+/*  60 */  (20, .SH( 4)), (22, .SH(17)), (43, .SH( 2)), (44, .RD(39)), (40, .SH( 1)),
+/*  65 */  (41, .RD(42)), (42, .SH(38)), (40, .SH( 1)), (41, .RD(30)), (42, .SH(38)),
+/*  70 */  (37, .SH(18)), (45, .RD( 2)), (37, .SH(22)), (24, .SR(12)), (24, .SR(11)),
+/*  75 */  (24, .SR( 9)), (43, .SH( 2)), (44, .RD(39)), (43, .SH( 2)), (44, .RD(39)),
+/*  80 */  (37, .SH(23)), (45, .RD( 2)), (37, .SH(24)), (24, .SR( 7)), (37, .SH(25)),
+/*  85 */  (24, .SR( 5)), (43, .SH( 2)), (44, .RD(39)), (43, .SH( 2)), (44, .RD(39)),
+/*  90 */  (43, .SH( 2)), (44, .RD(39)), (37, .SH(20)), (24, .SR( 3)), (37, .SH(21)),
+/*  95 */  (24, .SR(48)), (45, .RD( 2)), (24, .SR(47)), (43, .SH( 2)), (44, .RD(39)),
+/* 100 */  (43, .SH( 2)), (44, .RD(39)), (24, .SR(46)), (24, .SR(45)), (24, .SR(44)),
+/* 105 */  (24, .SR(43)),
     ]
 
-    let yyShiftUseDefault: Int = 108
+    let yyShiftUseDefault: Int = 106
     let yyShiftOffsetMin: Int = -1
-    let yyShiftOffsetMax: Int = 83
+    let yyShiftOffsetMax: Int = 81
     let yyShiftOffset: [Int] = [
-        /*     0 */    40,   -1,   -1,   40,   40,   40,   40,   40,   40,   40,
-        /*    10 */    28,   28,   28,   28,   28,   28,   28,   28,    0,   34,
-        /*    20 */    26,   26,   66,   53,   53,   53,   53,   60,   69,   70,
-        /*    30 */    71,   72,   73,   74,   75,   76,   77,   79,   80,   81,
-        /*    40 */    82,   83,
+        /*     0 */    20,   -1,   -1,   20,   20,   20,   20,   20,   20,   20,
+        /*    10 */    37,   37,   37,   37,   37,   37,   37,   37,    0,   23,
+        /*    20 */    14,   14,   40,   40,   40,   40,   49,   50,   51,   59,
+        /*    30 */    61,   69,   71,   73,   78,   79,   80,   81,   39,
     ]
 
-    let yyReduceUseDefault: Int = -38
-    let yyReduceOffsetMin: Int =   -37
-    let yyReduceOffsetMax: Int =   46
+    let yyReduceUseDefault: Int = -36
+    let yyReduceOffsetMin: Int =   -35
+    let yyReduceOffsetMax: Int =   57
     let yyReduceOffset: [Int] = [
-        /*     0 */   -16,   13,   16,   24,   29,   31,   37,   39,   44,   46,
-        /*    10 */   -37,  -30,  -22,   -9,    3,    4,   19,   23,
+        /*     0 */    19,   24,   27,   33,   35,   43,   45,   47,   55,   57,
+        /*    10 */   -35,  -28,  -21,   -7,   -5,    3,   15,   17,
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
-  /*     0 */  .ERROR , .RD(40), .RD( 5), .ERROR , .ERROR ,
+  /*     0 */  .ERROR , .RD(41), .RD(31), .ERROR , .ERROR ,
   /*     5 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    10 */  .ERROR , .ERROR , .RD(25), .RD(23), .ERROR ,
-  /*    15 */  .RD(11), .RD( 9), .RD( 7), .ERROR , .ERROR ,
-  /*    20 */  .RD(32), .RD(31), .ERROR , .RD(36), .RD(35),
-  /*    25 */  .RD(34), .RD(33), .ERROR , .ERROR , .ERROR ,
-  /*    30 */  .RD(18), .ERROR , .RD(15), .RD(13), .ERROR ,
-  /*    35 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    40 */  .RD( 3), .RD(37),
+  /*    10 */  .RD(26), .RD(24), .RD(22), .ERROR , .ERROR ,
+  /*    15 */  .RD(16), .RD(14), .ERROR , .ERROR , .ERROR ,
+  /*    20 */  .RD(33), .RD(32), .RD(37), .RD(36), .RD(35),
+  /*    25 */  .RD(34), .ERROR , .ERROR , .RD(10), .RD( 8),
+  /*    30 */  .RD( 6), .RD( 4), .ERROR , .ERROR , .ERROR ,
+  /*    35 */  .ERROR , .ERROR , .ERROR , .RD( 2),
     ]
 
     // Fallback
@@ -209,53 +207,54 @@ class DiceRollParser: CitronParser {
 
     let yyRuleInfo: [(lhs: CitronSymbolNumber, nrhs: UInt)] = [
         (lhs: 39, nrhs: 1),
-        (lhs: 40, nrhs: 3),
-        (lhs: 40, nrhs: 3),
-        (lhs: 40, nrhs: 3),
-        (lhs: 40, nrhs: 4),
+        (lhs: 41, nrhs: 3),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 40, nrhs: 2),
+        (lhs: 40, nrhs: 1),
+        (lhs: 43, nrhs: 1),
+        (lhs: 43, nrhs: 1),
+        (lhs: 43, nrhs: 1),
+        (lhs: 44, nrhs: 2),
+        (lhs: 44, nrhs: 1),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 3),
+        (lhs: 37, nrhs: 1),
+        (lhs: 37, nrhs: 1),
+        (lhs: 37, nrhs: 3),
         (lhs: 41, nrhs: 1),
         (lhs: 41, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 42, nrhs: 3),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 2),
-        (lhs: 43, nrhs: 1),
-        (lhs: 43, nrhs: 1),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 1),
-        (lhs: 37, nrhs: 1),
-        (lhs: 37, nrhs: 3),
-        (lhs: 42, nrhs: 1),
         (lhs: 42, nrhs: 2),
-        (lhs: 44, nrhs: 2),
-        (lhs: 44, nrhs: 2),
-        (lhs: 44, nrhs: 2),
-        (lhs: 44, nrhs: 2),
-        (lhs: 44, nrhs: 2),
-        (lhs: 44, nrhs: 2),
+        (lhs: 42, nrhs: 2),
+        (lhs: 42, nrhs: 2),
+        (lhs: 42, nrhs: 2),
+        (lhs: 42, nrhs: 2),
+        (lhs: 42, nrhs: 2),
     ]
 
     // Stack
@@ -294,79 +293,80 @@ class DiceRollParser: CitronParser {
     /* 19 */ "Modulo",
     /* 20 */ "Power",
     /* 21 */ "Die",
-    /* 22 */ "Integer",
-    /* 23 */ "Percent",
-    /* 24 */ "Fudge",
-    /* 25 */ "FateSides",
-    /* 26 */ "Fail",
-    /* 27 */ "KeepHigh",
-    /* 28 */ "KeepLow",
-    /* 29 */ "DropLow",
-    /* 30 */ "DropHigh",
-    /* 31 */ "Min",
-    /* 32 */ "Max",
-    /* 33 */ "SortAscending",
-    /* 34 */ "SortDescending",
+    /* 22 */ "Fail",
+    /* 23 */ "KeepHigh",
+    /* 24 */ "Integer",
+    /* 25 */ "KeepLow",
+    /* 26 */ "DropLow",
+    /* 27 */ "DropHigh",
+    /* 28 */ "Min",
+    /* 29 */ "Max",
+    /* 30 */ "SortAscending",
+    /* 31 */ "SortDescending",
+    /* 32 */ "StandardDie",
+    /* 33 */ "PercentageDie",
+    /* 34 */ "FudgeDie",
     /* 35 */ "OpenParen",
     /* 36 */ "CloseParen",
     /* 37 */ "expr",
     /* 38 */ "expr_list",
     /* 39 */ "root",
-    /* 40 */ "dice",
-    /* 41 */ "roll",
-    /* 42 */ "modifier_list",
-    /* 43 */ "modifier",
-    /* 44 */ "compare_point",
+    /* 40 */ "modifier",
+    /* 41 */ "modifier_list",
+    /* 42 */ "compare_point",
+    /* 43 */ "dice",
+    /* 44 */ "roll",
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(a)",
-        /*   1 */ "dice ::= Integer(c) Die Integer(s)",
-        /*   2 */ "dice ::= Integer(c) Die Percent",
-        /*   3 */ "dice ::= Integer(c) Die Fudge",
-        /*   4 */ "dice ::= Integer(c) Die Fudge FateSides(v)",
-        /*   5 */ "roll ::= dice(d)",
-        /*   6 */ "roll ::= dice(d) modifier_list(mods)",
-        /*   7 */ "modifier ::= Explode",
-        /*   8 */ "modifier ::= Explode compare_point(cp)",
-        /*   9 */ "modifier ::= Compound",
-        /*  10 */ "modifier ::= Compound compare_point(cp)",
-        /*  11 */ "modifier ::= Penetrate",
-        /*  12 */ "modifier ::= Penetrate compare_point(cp)",
-        /*  13 */ "modifier ::= compare_point(cp)",
-        /*  14 */ "modifier_list ::= compare_point(scp) Fail compare_point(fcp)",
-        /*  15 */ "modifier ::= KeepHigh",
-        /*  16 */ "modifier ::= KeepHigh Integer(a)",
-        /*  17 */ "modifier ::= KeepLow Integer(a)",
-        /*  18 */ "modifier ::= DropLow",
-        /*  19 */ "modifier ::= DropHigh Integer(a)",
-        /*  20 */ "modifier ::= DropLow Integer(a)",
-        /*  21 */ "modifier ::= Min Integer(a)",
-        /*  22 */ "modifier ::= Max Integer(a)",
-        /*  23 */ "modifier ::= Reroll",
-        /*  24 */ "modifier ::= Reroll compare_point(cp)",
-        /*  25 */ "modifier ::= RerollOnce",
-        /*  26 */ "modifier ::= RerollOnce compare_point(cp)",
-        /*  27 */ "modifier ::= Critical compare_point(cp)",
-        /*  28 */ "modifier ::= Fumble compare_point(cp)",
-        /*  29 */ "modifier ::= SortAscending",
-        /*  30 */ "modifier ::= SortDescending",
-        /*  31 */ "expr ::= expr(a) Add expr(b)",
-        /*  32 */ "expr ::= expr(a) Subtract expr(b)",
-        /*  33 */ "expr ::= expr(a) Multiply expr(b)",
-        /*  34 */ "expr ::= expr(a) Divide expr(b)",
-        /*  35 */ "expr ::= expr(a) Modulo expr(b)",
-        /*  36 */ "expr ::= expr(a) Power expr(b)",
-        /*  37 */ "expr ::= Integer(a)",
-        /*  38 */ "expr ::= roll(a)",
-        /*  39 */ "expr ::= OpenParen expr(a) CloseParen",
-        /*  40 */ "modifier_list ::= modifier(a)",
-        /*  41 */ "modifier_list ::= modifier(a) modifier_list(b)",
-        /*  42 */ "compare_point ::= Equal Integer(a)",
-        /*  43 */ "compare_point ::= NotEqual Integer(a)",
-        /*  44 */ "compare_point ::= Greater Integer(a)",
-        /*  45 */ "compare_point ::= GreaterEqual Integer(a)",
-        /*  46 */ "compare_point ::= Lesser Integer(a)",
-        /*  47 */ "compare_point ::= LesserEqual Integer(a)",
+        /*   1 */ "modifier_list ::= compare_point(scp) Fail compare_point(fcp)",
+        /*   2 */ "modifier ::= compare_point(cp)",
+        /*   3 */ "modifier ::= KeepHigh Integer(a)",
+        /*   4 */ "modifier ::= KeepHigh",
+        /*   5 */ "modifier ::= KeepLow Integer(a)",
+        /*   6 */ "modifier ::= KeepLow",
+        /*   7 */ "modifier ::= DropLow Integer(a)",
+        /*   8 */ "modifier ::= DropLow",
+        /*   9 */ "modifier ::= DropHigh Integer(a)",
+        /*  10 */ "modifier ::= DropHigh",
+        /*  11 */ "modifier ::= Min Integer(a)",
+        /*  12 */ "modifier ::= Max Integer(a)",
+        /*  13 */ "modifier ::= Reroll compare_point(cp)",
+        /*  14 */ "modifier ::= Reroll",
+        /*  15 */ "modifier ::= RerollOnce compare_point(cp)",
+        /*  16 */ "modifier ::= RerollOnce",
+        /*  17 */ "modifier ::= Critical compare_point(cp)",
+        /*  18 */ "modifier ::= Fumble compare_point(cp)",
+        /*  19 */ "modifier ::= SortAscending",
+        /*  20 */ "modifier ::= SortDescending",
+        /*  21 */ "modifier ::= Explode compare_point(cp)",
+        /*  22 */ "modifier ::= Explode",
+        /*  23 */ "modifier ::= Compound compare_point(cp)",
+        /*  24 */ "modifier ::= Compound",
+        /*  25 */ "modifier ::= Penetrate compare_point(cp)",
+        /*  26 */ "modifier ::= Penetrate",
+        /*  27 */ "dice ::= StandardDie(d)",
+        /*  28 */ "dice ::= PercentageDie(d)",
+        /*  29 */ "dice ::= FudgeDie(d)",
+        /*  30 */ "roll ::= dice(d) modifier_list(mods)",
+        /*  31 */ "roll ::= dice(d)",
+        /*  32 */ "expr ::= expr(a) Add expr(b)",
+        /*  33 */ "expr ::= expr(a) Subtract expr(b)",
+        /*  34 */ "expr ::= expr(a) Multiply expr(b)",
+        /*  35 */ "expr ::= expr(a) Divide expr(b)",
+        /*  36 */ "expr ::= expr(a) Modulo expr(b)",
+        /*  37 */ "expr ::= expr(a) Power expr(b)",
+        /*  38 */ "expr ::= Integer(a)",
+        /*  39 */ "expr ::= roll(a)",
+        /*  40 */ "expr ::= OpenParen expr(a) CloseParen",
+        /*  41 */ "modifier_list ::= modifier(a)",
+        /*  42 */ "modifier_list ::= modifier(a) modifier_list(b)",
+        /*  43 */ "compare_point ::= Equal Integer(a)",
+        /*  44 */ "compare_point ::= NotEqual Integer(a)",
+        /*  45 */ "compare_point ::= Greater Integer(a)",
+        /*  46 */ "compare_point ::= GreaterEqual Integer(a)",
+        /*  47 */ "compare_point ::= Lesser Integer(a)",
+        /*  48 */ "compare_point ::= LesserEqual Integer(a)",
     ]
 
     // Extra class members
@@ -392,156 +392,9 @@ class DiceRollParser: CitronParser {
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule00(a: a))
             }
-        case 1: /* dice ::= Integer(c) Die Integer(s) */
-            func codeBlockForRule01(c: (token: Token, position: CitronLexerPosition), s: (token: Token, position: CitronLexerPosition)) throws -> Dice {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 64)
-
-    currentDieMax = s.token.value
-    return .standard(sides: s.token.value, count: c.token.value)
-
-#sourceLocation()
-}
-            if case .yy0(let c) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy0(let s) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy40(try codeBlockForRule01(c: c, s: s))
-            }
-        case 2: /* dice ::= Integer(c) Die Percent */
-            func codeBlockForRule02(c: (token: Token, position: CitronLexerPosition)) throws -> Dice {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 68)
-
-    currentDieMax = 100
-    return .percent(count: c.token.value)
-
-#sourceLocation()
-}
-            if case .yy0(let c) = yySymbolOnStack(distanceFromTop: 2) {
-                return .yy40(try codeBlockForRule02(c: c))
-            }
-        case 3: /* dice ::= Integer(c) Die Fudge */
-            func codeBlockForRule03(c: (token: Token, position: CitronLexerPosition)) throws -> Dice {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 72)
-
-    currentDieMax = 1
-    return .fate(lowProbability: false, count: c.token.value)
-
-#sourceLocation()
-}
-            if case .yy0(let c) = yySymbolOnStack(distanceFromTop: 2) {
-                return .yy40(try codeBlockForRule03(c: c))
-            }
-        case 4: /* dice ::= Integer(c) Die Fudge FateSides(v) */
-            func codeBlockForRule04(c: (token: Token, position: CitronLexerPosition), v: (token: Token, position: CitronLexerPosition)) throws -> Dice {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 76)
-
-    currentDieMax = 1
-    return .fate(lowProbability: v.token.value == 1, count: c.token.value)
-
-#sourceLocation()
-}
-            if case .yy0(let c) = yySymbolOnStack(distanceFromTop: 3),
-               case .yy0(let v) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy40(try codeBlockForRule04(c: c, v: v))
-            }
-        case 5: /* roll ::= dice(d) */
-            func codeBlockForRule05(d: Dice) throws -> Roll {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 86)
-
-    return Roll(dice: d)
-
-#sourceLocation()
-}
-            if case .yy40(let d) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy66(try codeBlockForRule05(d: d))
-            }
-        case 6: /* roll ::= dice(d) modifier_list(mods) */
-            func codeBlockForRule06(d: Dice, mods: [Modifier]) throws -> Roll {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 89)
-
-    return Roll(dice: d, modifiers: mods)
-
-#sourceLocation()
-}
-            if case .yy40(let d) = yySymbolOnStack(distanceFromTop: 1),
-               case .yy48(let mods) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy66(try codeBlockForRule06(d: d, mods: mods))
-            }
-        case 7: /* modifier ::= Explode */
-            func codeBlockForRule07() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 101)
-
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .exploding)
-
-#sourceLocation()
-}
-            return .yy30(try codeBlockForRule07())
-        case 8: /* modifier ::= Explode compare_point(cp) */
-            func codeBlockForRule08(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 105)
-
-    return Modifiers.Explode(comparison: cp, format: .exploding)
-
-#sourceLocation()
-}
-            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule08(cp: cp))
-            }
-        case 9: /* modifier ::= Compound */
-            func codeBlockForRule09() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 108)
-
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .compounding)
-
-#sourceLocation()
-}
-            return .yy30(try codeBlockForRule09())
-        case 10: /* modifier ::= Compound compare_point(cp) */
-            func codeBlockForRule10(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 112)
-
-    return Modifiers.Explode(comparison: cp, format: .compounding)
-
-#sourceLocation()
-}
-            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule10(cp: cp))
-            }
-        case 11: /* modifier ::= Penetrate */
-            func codeBlockForRule11() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 115)
-
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .penetrating)
-
-#sourceLocation()
-}
-            return .yy30(try codeBlockForRule11())
-        case 12: /* modifier ::= Penetrate compare_point(cp) */
-            func codeBlockForRule12(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 119)
-
-    return Modifiers.Explode(comparison: cp, format: .penetrating)
-
-#sourceLocation()
-}
-            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule12(cp: cp))
-            }
-        case 13: /* modifier ::= compare_point(cp) */
-            func codeBlockForRule13(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 125)
-
-    return Modifiers.Success(comparison: cp)
-
-#sourceLocation()
-}
-            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule13(cp: cp))
-            }
-        case 14: /* modifier_list ::= compare_point(scp) Fail compare_point(fcp) */
-            func codeBlockForRule14(scp: ComparisonPoint, fcp: ComparisonPoint) throws -> [Modifier] {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 128)
+        case 1: /* modifier_list ::= compare_point(scp) Fail compare_point(fcp) */
+            func codeBlockForRule01(scp: ComparisonPoint, fcp: ComparisonPoint) throws -> [Modifier] {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 67)
 
     return [
         Modifiers.Success(comparison: scp),
@@ -552,343 +405,494 @@ class DiceRollParser: CitronParser {
 }
             if case .yy52(let scp) = yySymbolOnStack(distanceFromTop: 2),
                case .yy52(let fcp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy48(try codeBlockForRule14(scp: scp, fcp: fcp))
+                return .yy48(try codeBlockForRule01(scp: scp, fcp: fcp))
             }
-        case 15: /* modifier ::= KeepHigh */
-            func codeBlockForRule15() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 137)
+        case 2: /* modifier ::= compare_point(cp) */
+            func codeBlockForRule02(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 73)
 
-    return Modifiers.Keep(high: true, count: 1)
+    return Modifiers.Success(comparison: cp)
 
 #sourceLocation()
 }
-            return .yy30(try codeBlockForRule15())
-        case 16: /* modifier ::= KeepHigh Integer(a) */
-            func codeBlockForRule16(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 140)
+            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy30(try codeBlockForRule02(cp: cp))
+            }
+        case 3: /* modifier ::= KeepHigh Integer(a) */
+            func codeBlockForRule03(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 79)
 
     return Modifiers.Keep(high: true, count: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule16(a: a))
+                return .yy30(try codeBlockForRule03(a: a))
             }
-        case 17: /* modifier ::= KeepLow Integer(a) */
-            func codeBlockForRule17(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 143)
+        case 4: /* modifier ::= KeepHigh */
+            func codeBlockForRule04() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 82)
+
+    return Modifiers.Keep(high: true, count: 1)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule04())
+        case 5: /* modifier ::= KeepLow Integer(a) */
+            func codeBlockForRule05(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 85)
 
     return Modifiers.Keep(high: false, count: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule17(a: a))
+                return .yy30(try codeBlockForRule05(a: a))
             }
-        case 18: /* modifier ::= DropLow */
-            func codeBlockForRule18() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 147)
+        case 6: /* modifier ::= KeepLow */
+            func codeBlockForRule06() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 88)
 
-    return Modifiers.Drop(high: false, count: 1)
+    return Modifiers.Keep(high: false, count: 1)
 
 #sourceLocation()
 }
-            return .yy30(try codeBlockForRule18())
-        case 19: /* modifier ::= DropHigh Integer(a) */
-            func codeBlockForRule19(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 150)
-
-    return Modifiers.Drop(high: true, count: a.token.value)
-
-#sourceLocation()
-}
-            if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule19(a: a))
-            }
-        case 20: /* modifier ::= DropLow Integer(a) */
-            func codeBlockForRule20(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 153)
+            return .yy30(try codeBlockForRule06())
+        case 7: /* modifier ::= DropLow Integer(a) */
+            func codeBlockForRule07(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 92)
 
     return Modifiers.Drop(high: false, count: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule20(a: a))
+                return .yy30(try codeBlockForRule07(a: a))
             }
-        case 21: /* modifier ::= Min Integer(a) */
-            func codeBlockForRule21(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 159)
+        case 8: /* modifier ::= DropLow */
+            func codeBlockForRule08() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 95)
+
+    return Modifiers.Drop(high: false, count: 1)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule08())
+        case 9: /* modifier ::= DropHigh Integer(a) */
+            func codeBlockForRule09(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 98)
+
+    return Modifiers.Drop(high: true, count: a.token.value)
+
+#sourceLocation()
+}
+            if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy30(try codeBlockForRule09(a: a))
+            }
+        case 10: /* modifier ::= DropHigh */
+            func codeBlockForRule10() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 101)
+
+    return Modifiers.Drop(high: true, count: 1)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule10())
+        case 11: /* modifier ::= Min Integer(a) */
+            func codeBlockForRule11(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 107)
 
     return Modifiers.Minimum(value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule21(a: a))
+                return .yy30(try codeBlockForRule11(a: a))
             }
-        case 22: /* modifier ::= Max Integer(a) */
-            func codeBlockForRule22(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 162)
+        case 12: /* modifier ::= Max Integer(a) */
+            func codeBlockForRule12(a: (token: Token, position: CitronLexerPosition)) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 110)
 
     return Modifiers.Maximum(value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule22(a: a))
+                return .yy30(try codeBlockForRule12(a: a))
             }
-        case 23: /* modifier ::= Reroll */
-            func codeBlockForRule23() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 168)
-
-    return Modifiers.Reroll()
-
-#sourceLocation()
-}
-            return .yy30(try codeBlockForRule23())
-        case 24: /* modifier ::= Reroll compare_point(cp) */
-            func codeBlockForRule24(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 171)
+        case 13: /* modifier ::= Reroll compare_point(cp) */
+            func codeBlockForRule13(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 116)
 
     return Modifiers.Reroll(comparison: cp)
 
 #sourceLocation()
 }
             if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule24(cp: cp))
+                return .yy30(try codeBlockForRule13(cp: cp))
             }
-        case 25: /* modifier ::= RerollOnce */
-            func codeBlockForRule25() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 174)
+        case 14: /* modifier ::= Reroll */
+            func codeBlockForRule14() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 119)
 
-    return Modifiers.Reroll(once: true)
+    return Modifiers.Reroll()
 
 #sourceLocation()
 }
-            return .yy30(try codeBlockForRule25())
-        case 26: /* modifier ::= RerollOnce compare_point(cp) */
-            func codeBlockForRule26(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 177)
+            return .yy30(try codeBlockForRule14())
+        case 15: /* modifier ::= RerollOnce compare_point(cp) */
+            func codeBlockForRule15(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 122)
 
     return Modifiers.Reroll(once: true, comparison: cp)
 
 #sourceLocation()
 }
             if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule26(cp: cp))
+                return .yy30(try codeBlockForRule15(cp: cp))
             }
-        case 27: /* modifier ::= Critical compare_point(cp) */
-            func codeBlockForRule27(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 183)
+        case 16: /* modifier ::= RerollOnce */
+            func codeBlockForRule16() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 125)
+
+    return Modifiers.Reroll(once: true)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule16())
+        case 17: /* modifier ::= Critical compare_point(cp) */
+            func codeBlockForRule17(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 131)
 
     return Modifiers.CriticalSuccess(comparison: cp)
 
 #sourceLocation()
 }
             if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule27(cp: cp))
+                return .yy30(try codeBlockForRule17(cp: cp))
             }
-        case 28: /* modifier ::= Fumble compare_point(cp) */
-            func codeBlockForRule28(cp: ComparisonPoint) throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 186)
+        case 18: /* modifier ::= Fumble compare_point(cp) */
+            func codeBlockForRule18(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 134)
 
     return Modifiers.CriticalFailure(comparison: cp)
 
 #sourceLocation()
 }
             if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy30(try codeBlockForRule28(cp: cp))
+                return .yy30(try codeBlockForRule18(cp: cp))
             }
-        case 29: /* modifier ::= SortAscending */
-            func codeBlockForRule29() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 192)
+        case 19: /* modifier ::= SortAscending */
+            func codeBlockForRule19() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 140)
 
     return Modifiers.Sorting(ascending: true)
 
 #sourceLocation()
 }
-            return .yy30(try codeBlockForRule29())
-        case 30: /* modifier ::= SortDescending */
-            func codeBlockForRule30() throws -> Modifier {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 195)
+            return .yy30(try codeBlockForRule19())
+        case 20: /* modifier ::= SortDescending */
+            func codeBlockForRule20() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 143)
 
     return Modifiers.Sorting(ascending: false)
 
 #sourceLocation()
 }
-            return .yy30(try codeBlockForRule30())
-        case 31: /* expr ::= expr(a) Add expr(b) */
-            func codeBlockForRule31(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 202)
- return .addition(a, b) 
+            return .yy30(try codeBlockForRule20())
+        case 21: /* modifier ::= Explode compare_point(cp) */
+            func codeBlockForRule21(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 149)
+
+    return Modifiers.Explode(comparison: cp, format: .exploding)
+
 #sourceLocation()
 }
-            if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy5(try codeBlockForRule31(a: a, b: b))
+            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy30(try codeBlockForRule21(cp: cp))
             }
-        case 32: /* expr ::= expr(a) Subtract expr(b) */
+        case 22: /* modifier ::= Explode */
+            func codeBlockForRule22() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 152)
+
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .exploding)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule22())
+        case 23: /* modifier ::= Compound compare_point(cp) */
+            func codeBlockForRule23(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 156)
+
+    return Modifiers.Explode(comparison: cp, format: .compounding)
+
+#sourceLocation()
+}
+            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy30(try codeBlockForRule23(cp: cp))
+            }
+        case 24: /* modifier ::= Compound */
+            func codeBlockForRule24() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 159)
+
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .compounding)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule24())
+        case 25: /* modifier ::= Penetrate compare_point(cp) */
+            func codeBlockForRule25(cp: ComparisonPoint) throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 163)
+
+    return Modifiers.Explode(comparison: cp, format: .penetrating)
+
+#sourceLocation()
+}
+            if case .yy52(let cp) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy30(try codeBlockForRule25(cp: cp))
+            }
+        case 26: /* modifier ::= Penetrate */
+            func codeBlockForRule26() throws -> Modifier {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 166)
+
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .penetrating)
+
+#sourceLocation()
+}
+            return .yy30(try codeBlockForRule26())
+        case 27: /* dice ::= StandardDie(d) */
+            func codeBlockForRule27(d: (token: Token, position: CitronLexerPosition)) throws -> Dice {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 176)
+
+    currentDieMax = d.token.sides
+    return .standard(sides: d.token.sides, count: d.token.count)
+
+#sourceLocation()
+}
+            if case .yy0(let d) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy40(try codeBlockForRule27(d: d))
+            }
+        case 28: /* dice ::= PercentageDie(d) */
+            func codeBlockForRule28(d: (token: Token, position: CitronLexerPosition)) throws -> Dice {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 180)
+
+    currentDieMax = 100
+    return .percent(count: d.token.value)
+
+#sourceLocation()
+}
+            if case .yy0(let d) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy40(try codeBlockForRule28(d: d))
+            }
+        case 29: /* dice ::= FudgeDie(d) */
+            func codeBlockForRule29(d: (token: Token, position: CitronLexerPosition)) throws -> Dice {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 184)
+
+    currentDieMax = 1
+    return .fate(lowProbability: d.token.lowFate, count: d.token.count)
+
+#sourceLocation()
+}
+            if case .yy0(let d) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy40(try codeBlockForRule29(d: d))
+            }
+        case 30: /* roll ::= dice(d) modifier_list(mods) */
+            func codeBlockForRule30(d: Dice, mods: [Modifier]) throws -> Roll {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 194)
+
+    return Roll(dice: d, modifiers: mods)
+
+#sourceLocation()
+}
+            if case .yy40(let d) = yySymbolOnStack(distanceFromTop: 1),
+               case .yy48(let mods) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy66(try codeBlockForRule30(d: d, mods: mods))
+            }
+        case 31: /* roll ::= dice(d) */
+            func codeBlockForRule31(d: Dice) throws -> Roll {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 197)
+
+    return Roll(dice: d)
+
+#sourceLocation()
+}
+            if case .yy40(let d) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy66(try codeBlockForRule31(d: d))
+            }
+        case 32: /* expr ::= expr(a) Add expr(b) */
             func codeBlockForRule32(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 203)
- return .subtraction(a, b) 
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 204)
+ return .addition(a, b) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
                case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule32(a: a, b: b))
             }
-        case 33: /* expr ::= expr(a) Multiply expr(b) */
+        case 33: /* expr ::= expr(a) Subtract expr(b) */
             func codeBlockForRule33(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 204)
- return .multiplication(a, b) 
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 205)
+ return .subtraction(a, b) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
                case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule33(a: a, b: b))
             }
-        case 34: /* expr ::= expr(a) Divide expr(b) */
+        case 34: /* expr ::= expr(a) Multiply expr(b) */
             func codeBlockForRule34(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 205)
- return .division(a, b) 
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 206)
+ return .multiplication(a, b) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
                case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule34(a: a, b: b))
             }
-        case 35: /* expr ::= expr(a) Modulo expr(b) */
+        case 35: /* expr ::= expr(a) Divide expr(b) */
             func codeBlockForRule35(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 206)
- return .modulus(a, b) 
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 207)
+ return .division(a, b) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
                case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule35(a: a, b: b))
             }
-        case 36: /* expr ::= expr(a) Power expr(b) */
+        case 36: /* expr ::= expr(a) Modulo expr(b) */
             func codeBlockForRule36(a: Expression, b: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 207)
- return .power(a, b) 
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 208)
+ return .modulus(a, b) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
                case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy5(try codeBlockForRule36(a: a, b: b))
             }
-        case 37: /* expr ::= Integer(a) */
-            func codeBlockForRule37(a: (token: Token, position: CitronLexerPosition)) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 212)
+        case 37: /* expr ::= expr(a) Power expr(b) */
+            func codeBlockForRule37(a: Expression, b: Expression) throws -> Expression {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 209)
+ return .power(a, b) 
+#sourceLocation()
+}
+            if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 2),
+               case .yy5(let b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy5(try codeBlockForRule37(a: a, b: b))
+            }
+        case 38: /* expr ::= Integer(a) */
+            func codeBlockForRule38(a: (token: Token, position: CitronLexerPosition)) throws -> Expression {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 214)
  return .number(a.token.value) 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy5(try codeBlockForRule37(a: a))
+                return .yy5(try codeBlockForRule38(a: a))
             }
-        case 38: /* expr ::= roll(a) */
-            func codeBlockForRule38(a: Roll) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 213)
+        case 39: /* expr ::= roll(a) */
+            func codeBlockForRule39(a: Roll) throws -> Expression {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 215)
  return .roll(a) 
 #sourceLocation()
 }
             if case .yy66(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy5(try codeBlockForRule38(a: a))
+                return .yy5(try codeBlockForRule39(a: a))
             }
-        case 39: /* expr ::= OpenParen expr(a) CloseParen */
-            func codeBlockForRule39(a: Expression) throws -> Expression {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 214)
+        case 40: /* expr ::= OpenParen expr(a) CloseParen */
+            func codeBlockForRule40(a: Expression) throws -> Expression {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 216)
  return .braced(a) 
 #sourceLocation()
 }
             if case .yy5(let a) = yySymbolOnStack(distanceFromTop: 1) {
-                return .yy5(try codeBlockForRule39(a: a))
+                return .yy5(try codeBlockForRule40(a: a))
             }
-        case 40: /* modifier_list ::= modifier(a) */
-            func codeBlockForRule40(a: Modifier) throws -> [Modifier] {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 222)
+        case 41: /* modifier_list ::= modifier(a) */
+            func codeBlockForRule41(a: Modifier) throws -> [Modifier] {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 224)
  return [a] 
 #sourceLocation()
 }
             if case .yy30(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy48(try codeBlockForRule40(a: a))
+                return .yy48(try codeBlockForRule41(a: a))
             }
-        case 41: /* modifier_list ::= modifier(a) modifier_list(b) */
-            func codeBlockForRule41(a: Modifier, b: [Modifier]) throws -> [Modifier] {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 223)
+        case 42: /* modifier_list ::= modifier(a) modifier_list(b) */
+            func codeBlockForRule42(a: Modifier, b: [Modifier]) throws -> [Modifier] {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 225)
  return [a] + b 
 #sourceLocation()
 }
             if case .yy30(let a) = yySymbolOnStack(distanceFromTop: 1),
                case .yy48(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy48(try codeBlockForRule41(a: a, b: b))
+                return .yy48(try codeBlockForRule42(a: a, b: b))
             }
-        case 42: /* compare_point ::= Equal Integer(a) */
-            func codeBlockForRule42(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 231)
+        case 43: /* compare_point ::= Equal Integer(a) */
+            func codeBlockForRule43(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 233)
 
     return ComparisonPoint(comparison: .equal, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule42(a: a))
+                return .yy52(try codeBlockForRule43(a: a))
             }
-        case 43: /* compare_point ::= NotEqual Integer(a) */
-            func codeBlockForRule43(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 234)
+        case 44: /* compare_point ::= NotEqual Integer(a) */
+            func codeBlockForRule44(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 236)
 
     return ComparisonPoint(comparison: .notEqual, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule43(a: a))
+                return .yy52(try codeBlockForRule44(a: a))
             }
-        case 44: /* compare_point ::= Greater Integer(a) */
-            func codeBlockForRule44(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 237)
+        case 45: /* compare_point ::= Greater Integer(a) */
+            func codeBlockForRule45(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 239)
 
     return ComparisonPoint(comparison: .greater, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule44(a: a))
+                return .yy52(try codeBlockForRule45(a: a))
             }
-        case 45: /* compare_point ::= GreaterEqual Integer(a) */
-            func codeBlockForRule45(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 240)
+        case 46: /* compare_point ::= GreaterEqual Integer(a) */
+            func codeBlockForRule46(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 242)
 
     return ComparisonPoint(comparison: .greaterEqual, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule45(a: a))
+                return .yy52(try codeBlockForRule46(a: a))
             }
-        case 46: /* compare_point ::= Lesser Integer(a) */
-            func codeBlockForRule46(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 243)
+        case 47: /* compare_point ::= Lesser Integer(a) */
+            func codeBlockForRule47(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 245)
 
     return ComparisonPoint(comparison: .lesser, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule46(a: a))
+                return .yy52(try codeBlockForRule47(a: a))
             }
-        case 47: /* compare_point ::= LesserEqual Integer(a) */
-            func codeBlockForRule47(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
-#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 246)
+        case 48: /* compare_point ::= LesserEqual Integer(a) */
+            func codeBlockForRule48(a: (token: Token, position: CitronLexerPosition)) throws -> ComparisonPoint {
+#sourceLocation(file: "Sources/DiceRoller/Parser/Grammar.y", line: 248)
 
     return ComparisonPoint(comparison: .lesserEqual, value: a.token.value)
 
 #sourceLocation()
 }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy52(try codeBlockForRule47(a: a))
+                return .yy52(try codeBlockForRule48(a: a))
             }
         default:
             fatalError("Can't invoke code block for rule number \(ruleNumber) - no such rule")
@@ -916,35 +920,35 @@ class DiceRollParser: CitronParser {
     weak var errorCaptureDelegate: CitronErrorCaptureDelegate? = nil
 
     let yyErrorCaptureSymbolNumbersForState: [CitronStateNumber:[CitronSymbolNumber]] = [
-          0 : [39, 40, 37],
-          1 : [43, 43, 44],
-          2 : [43, 43, 44],
-          3 : [40, 37],
-          4 : [40, 37],
-          5 : [40, 37],
-          6 : [40, 37],
-          7 : [40, 37],
-          8 : [40, 37],
-          9 : [40, 37],
-         10 : [44],
-         11 : [44],
-         12 : [44],
-         13 : [44],
-         14 : [44],
-         15 : [44],
-         16 : [44],
-         17 : [44],
+          0 : [39, 43, 37],
+          1 : [40, 42],
+          2 : [40, 42],
+          3 : [43, 37],
+          4 : [43, 37],
+          5 : [43, 37],
+          6 : [43, 37],
+          7 : [43, 37],
+          8 : [43, 37],
+          9 : [43, 37],
+         10 : [42],
+         11 : [42],
+         12 : [42],
+         13 : [42],
+         14 : [42],
+         15 : [42],
+         16 : [42],
+         17 : [42],
     ]
     let yyCanErrorCapture: Bool = true
     let yyErrorCaptureDirectives: [CitronSymbolNumber:(endAfter:[[CitronTokenCode]],endBefore:[CitronTokenCode])] = [
         37 : (endAfter: [],
               endBefore: [.CloseParen]),
         40 : (endAfter: [],
-              endBefore: [.CloseParen]),
-        43 : (endAfter: [],
               endBefore: [.CloseParen, .Add, .Subtract, .Multiply, .Divide, .Modulo, .Power]),
-        44 : (endAfter: [],
-              endBefore: [.CloseParen, .Add, .Subtract, .Multiply, .Divide, .Modulo, .Power])
+        42 : (endAfter: [],
+              endBefore: [.CloseParen, .Add, .Subtract, .Multiply, .Divide, .Modulo, .Power]),
+        43 : (endAfter: [],
+              endBefore: [.CloseParen])
     ]
     let yyErrorCaptureEndBeforeTokens: Set<CitronSymbolNumber> = [
         15, 16, 17, 18, 19, 20, 36
@@ -984,14 +988,6 @@ class DiceRollParser: CitronParser {
             case .dontCapture:
                 return nil
             }
-        case .dice:
-            let delegateResponse = delegate.shouldCaptureErrorOnDice(state: state, error: error)
-            switch (delegateResponse) {
-            case .captureAs(let symbol):
-                return .yy40(symbol)
-            case .dontCapture:
-                return nil
-            }
         case .modifier:
             let delegateResponse = delegate.shouldCaptureErrorOnModifier(state: state, error: error)
             switch (delegateResponse) {
@@ -1005,6 +1001,14 @@ class DiceRollParser: CitronParser {
             switch (delegateResponse) {
             case .captureAs(let symbol):
                 return .yy52(symbol)
+            case .dontCapture:
+                return nil
+            }
+        case .dice:
+            let delegateResponse = delegate.shouldCaptureErrorOnDice(state: state, error: error)
+            switch (delegateResponse) {
+            case .captureAs(let symbol):
+                return .yy40(symbol)
             case .dontCapture:
                 return nil
             }
@@ -1037,10 +1041,6 @@ protocol _DiceRollParserCitronErrorCaptureDelegate : AnyObject {
     func shouldCaptureErrorOnRoot(state: DiceRollParser.CitronErrorCaptureState,
         error: Error) -> CitronErrorCaptureResponse<Expression>
 
-    /* dice */
-    func shouldCaptureErrorOnDice(state: DiceRollParser.CitronErrorCaptureState,
-        error: Error) -> CitronErrorCaptureResponse<Dice>
-
     /* modifier */
     func shouldCaptureErrorOnModifier(state: DiceRollParser.CitronErrorCaptureState,
         error: Error) -> CitronErrorCaptureResponse<Modifier>
@@ -1048,6 +1048,10 @@ protocol _DiceRollParserCitronErrorCaptureDelegate : AnyObject {
     /* compare_point */
     func shouldCaptureErrorOnCompare_point(state: DiceRollParser.CitronErrorCaptureState,
         error: Error) -> CitronErrorCaptureResponse<ComparisonPoint>
+
+    /* dice */
+    func shouldCaptureErrorOnDice(state: DiceRollParser.CitronErrorCaptureState,
+        error: Error) -> CitronErrorCaptureResponse<Dice>
 }
 
 extension _DiceRollParserCitronErrorCaptureDelegate {

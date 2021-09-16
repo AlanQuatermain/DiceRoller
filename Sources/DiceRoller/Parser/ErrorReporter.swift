@@ -60,7 +60,7 @@ extension ErrorReporter: DiceRollParser.CitronErrorCaptureDelegate {
 
     func shouldCaptureErrorOnCompare_point(state: DiceRollParser.CitronErrorCaptureState, error: Error) -> CitronErrorCaptureResponse<ComparisonPoint> {
         reportError(error, on: .compare_point, state: state)
-        return .captureAs(ComparisonPoint(comparison: .greater, value: 0))
+        return .captureAs(ComparisonPoint(comparison: .greater, value: Int.max))
     }
 
     func findPartialExpression(from state: ErrorState) -> Expression? {
@@ -85,10 +85,10 @@ extension ErrorReporter {
         }
 
         switch symbol {
-        case .root:
-            croak("error in expression", at: errorPosition)
-        case .expr:
+        case .root, .expr:
             switch lastResolvedSymbolCode {
+            case .Die?:
+                croak("expected die size", at: errorPosition)
             case .dice?:
                 croak("expected compare point, comma, or modifier", at: errorPosition)
             case .modifier?, .modifier_list?:
@@ -97,21 +97,16 @@ extension ErrorReporter {
                 croak("invalid characters at start of expression", at: errorPosition)
             case .Add?, .Subtract?, .Multiply?, .Divide?, .Modulo?, .Power?:
                 croak("expected integer following operator", at: errorPosition)
+            case .Integer?:
+                croak("expected die specifier or operator", at: errorPosition)
             default:
-                croak("error in expression", at: errorPosition)
+                croak("error tokenizing 'expr'; lastResolved=\(String(describing: lastResolvedSymbolCode))",
+                      at: errorPosition)
             }
         case .dice:
             switch lastResolvedSymbolCode {
-            case .Die?:
-                croak("invalid die size. Expected number, '%', or 'F'", at: errorPosition)
-            case .Integer?:
-                croak("expected 'd{number}', 'd%', or 'dF'", at: errorPosition)
-            case .Fudge?:
-                croak("expected a modifier or a fate die size of '.1' or '.2'", at: errorPosition)
-            case .Percent?, .FateSides?:
-                croak("illegal modifier specification", at: errorPosition)
             default:
-                croak("expected integer to begin die specification", at: errorPosition)
+                croak("invalid die specification", at: errorPosition)
             }
         case .modifier:
             switch lastResolvedSymbolCode {
@@ -130,18 +125,18 @@ extension ErrorReporter {
             case .Critical?, .Fumble?:
                 croak("invalid critical comparison point", at: errorPosition)
             default:
-                croak("unknown modifier", at: errorPosition)
+                croak("unknown modifier; lastResolved=\(String(describing: lastResolvedSymbolCode))", at: errorPosition)
             }
         case .compare_point:
             switch lastResolvedSymbolCode {
             case .Equal?, .NotEqual?, .Greater?, .GreaterEqual?, .Lesser?, .LesserEqual?:
-                croak("expected number", at: errorPosition)
+                croak("expected number to follow comparison operator", at: errorPosition)
             default:
-                croak("expected operator", at: errorPosition)
+                croak("expected operator; lastResolved=\(String(describing: lastResolvedSymbolCode))", at: errorPosition)
             }
         default:
             // shouldn't happen, since we only pass in the above types
-            fatalError("Error on unexpected symbol \(symbol) at \(errorPosition):\n\(error)")
+            fatalError("Error on unexpected symbol \(symbol) following \(String(describing: lastResolvedSymbolCode)) at \(errorPosition):\n\(error)")
         }
     }
 

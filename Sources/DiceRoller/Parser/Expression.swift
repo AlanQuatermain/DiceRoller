@@ -39,6 +39,37 @@ public enum Expression {
     indirect case error(Error, Expression?)
 }
 
+extension Expression: Equatable {
+    public static func == (lhs: Expression, rhs: Expression) -> Bool {
+        switch (lhs, rhs) {
+        case let (.number(l), .number(r)):
+            return l == r
+        case let (.roll(l), .roll(r)):
+            return l == r
+        case let (.result(l), .result(r)):
+            return l == r
+        case let (.addition(ll, lr), .addition(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.subtraction(ll, lr), .subtraction(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.multiplication(ll, lr), .multiplication(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.division(ll, lr), .division(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.modulus(ll, lr), .modulus(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.power(ll, lr), .power(rl, rr)):
+            return ll == rl && lr == rr
+        case let (.braced(l), .braced(r)):
+            return l == r
+        case let (.error(le, lx), .error(re, rx)):
+            return lx == rx && String(describing: le) == String(describing: re)
+        default:
+            return false
+        }
+    }
+}
+
 extension Expression: CustomStringConvertible {
     public var description: String {
         switch self {

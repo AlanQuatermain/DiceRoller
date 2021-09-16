@@ -3,7 +3,7 @@ import XCTest
 
 final class DiceRollerTests: XCTestCase {
     func testExample() throws {
-        let input = "4d6!>4"
+        let input = "5d5>3"
         let roller = DiceRoller()
         do {
             let (parsed, rolled, result) = try roller.parse(input: input)

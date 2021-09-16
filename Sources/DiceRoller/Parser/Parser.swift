@@ -7,10 +7,12 @@
 
 import CitronLexerModule
 import CitronParserModule
+import Foundation
 
 enum Token {
     case punctuation
-    case dieSpec
+    case dieSpec(Int, Int)
+    case fudgeSpec(Bool, Int)
     case modifierSpec
     case `operator`
     case comparator
@@ -22,18 +24,63 @@ enum Token {
         }
         return 0
     }
+
+    var count: Int {
+        switch self {
+        case let .dieSpec(count, _), let .fudgeSpec(_, count):
+            return count
+        default:
+            return 0
+        }
+    }
+
+    var lowFate: Bool {
+        if case let .fudgeSpec(lowProb, _) = self {
+            return lowProb
+        }
+        return false
+    }
+
+    var sides: Int {
+        if case let .dieSpec(_, sides) = self {
+            return sides
+        }
+        return 0
+    }
 }
 
 typealias LexerTokenData = (token: Token, code: DiceRollParser.CitronTokenCode)
 typealias Rule = CitronLexer<LexerTokenData>.LexingRule
 
-let lexingRules: [Rule] = [
-    // Numbers
+let standardDieRegex = try! NSRegularExpression(pattern: "([1-9][0-9]*)?d([1-9][0-9]*)", options: [])
+let percentDieRegex = try! NSRegularExpression(pattern: "([1-9][0-9]*)?d%", options: [])
+let fateDieRegex = try! NSRegularExpression(pattern: "([1-9][0-9]*)?dF(?:\\.(1|2))?", options: [])
 
-    Rule.regexPattern("[1-9][0-9]*", {
-        guard let number = Int($0) else { return nil }
-        return (.integer(number), .Integer)
-    }),
+func getCountAndSize(from str: String, using regex: NSRegularExpression) -> (count: Int, size: Int)? {
+    let range = NSRange(str.startIndex..., in: str)
+    guard let match = regex.firstMatch(in: str, options: .anchored, range: range), (1...3).contains(match.numberOfRanges)
+    else { fatalError("Lexer matched regex '\(regex.pattern)' to '\(str)', but I can't do the same?") }
+
+    let countRange = match.range(at: 1)
+    var count = 1
+    var size = 100
+
+    if match.numberOfRanges == 3, match.range(at: 2).location != NSNotFound {
+        guard let sidesRange = Range(match.range(at: 2), in: str),
+              let numSides = Int(str[sidesRange])
+        else { return nil }
+
+        size = numSides
+    }
+
+    if countRange.location != NSNotFound, let rng = Range(countRange, in: str), let value = Int(str[rng]) {
+        count = value
+    }
+
+    return (count: count, size: size)
+}
+
+let lexingRules: [Rule] = [
 
     // Letter Tokens
 
@@ -42,19 +89,49 @@ let lexingRules: [Rule] = [
 
     // Dice
 
-    Rule.string("d",  (.dieSpec, .Die)),
-    Rule.string("%",  (.dieSpec, .Percent)),
-    Rule.string("dF", (.dieSpec, .Fudge)),
-    Rule.regexPattern("\\.(1|2)", {
-        guard let num = Int(String($0.dropFirst(1))) else { return nil }
-        return (.integer(num), .FateSides)
+    Rule.regex(standardDieRegex, {
+        if let (count, size) = getCountAndSize(from: $0, using: standardDieRegex) {
+            return (.dieSpec(count, size), .StandardDie)
+        }
+        return nil
+    }),
+    Rule.regex(percentDieRegex, {
+        if let (count, _) = getCountAndSize(from: $0, using: percentDieRegex) {
+            return (.integer(count), .PercentageDie)
+        }
+        return nil
+    }),
+    Rule.regex(fateDieRegex, {
+        if let (count, size) = getCountAndSize(from: $0, using: fateDieRegex) {
+            return (.fudgeSpec(size == 1, count), .FudgeDie)
+        }
+        return nil
     }),
 
-    // Explode Modifier
 
-    Rule.string("!",  (.modifierSpec, .Explode)),
+    // Numbers
+
+    Rule.regexPattern("[1-9][0-9]*", {
+        guard let number = Int($0) else { return nil }
+        return (.integer(number), .Integer)
+    }),
+
+    // Explode Modifier (has higher matching precedence than '!=')
+
     Rule.string("!!", (.modifierSpec, .Compound)),
     Rule.string("!p", (.modifierSpec, .Penetrate)),
+    Rule.string("!",  (.modifierSpec, .Explode)),
+
+
+    // Comparison Points
+
+    Rule.string("=",  (.comparator, .Equal)),
+    Rule.string("!=", (.comparator, .NotEqual)),
+    Rule.string("<>", (.comparator, .NotEqual)),
+    Rule.string(">=", (.comparator, .GreaterEqual)),
+    Rule.string("<=", (.comparator, .LesserEqual)),
+    Rule.string(">",  (.comparator, .Greater)),
+    Rule.string("<",  (.comparator, .Lesser)),
 
     // Target Modifiers (just the failure case has an extra token)
 
@@ -95,23 +172,12 @@ let lexingRules: [Rule] = [
 
     Rule.string("+",  (.operator, .Add)),
     Rule.string("-",  (.operator, .Subtract)),
+    Rule.string("**", (.operator, .Power)),     // Ensure we recognize this before '*'
     Rule.string("*",  (.operator, .Multiply)),
     Rule.string("/",  (.operator, .Divide)),
     Rule.string("÷",  (.operator, .Divide)),
     Rule.string("%",  (.operator, .Modulo)),
     Rule.string("^",  (.operator, .Power)),
-    Rule.string("**", (.operator, .Power)),
-
-
-    // Comparison Points
-
-    Rule.string("=",  (.comparator, .Equal)),
-    Rule.string("!=", (.comparator, .NotEqual)),
-    Rule.string("<>", (.comparator, .NotEqual)),
-    Rule.string(">",  (.comparator, .Greater)),
-    Rule.string(">=", (.comparator, .GreaterEqual)),
-    Rule.string("<",  (.comparator, .Lesser)),
-    Rule.string("<=", (.comparator, .LesserEqual)),
 
 
     // Whitespace is ignored

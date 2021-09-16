@@ -57,101 +57,49 @@ root ::= expr(a). { return a }
 //}
 
 
-// Dice
-
-%nonterminal_type dice Dice
-
-dice ::= Integer(c) Die Integer(s). {
-    currentDieMax = s.token.value
-    return .standard(sides: s.token.value, count: c.token.value)
-}
-dice ::= Integer(c) Die Percent. {
-    currentDieMax = 100
-    return .percent(count: c.token.value)
-}
-dice ::= Integer(c) Die Fudge. {
-    currentDieMax = 1
-    return .fate(lowProbability: false, count: c.token.value)
-}
-dice ::= Integer(c) Die Fudge FateSides(v). {
-    currentDieMax = 1
-    return .fate(lowProbability: v.token.value == 1, count: c.token.value)
-}
-
-
-// Rolls (dice + modifiers)
-
-%nonterminal_type roll Roll
-
-roll ::= dice(d). {
-    return Roll(dice: d)
-}
-roll ::= dice(d) modifier_list(mods). {
-    return Roll(dice: d, modifiers: mods)
-}
-
-
 // Modifiers
 
 %nonterminal_type modifier Modifier
 %nonterminal_type modifier_list "[Modifier]"
 
-// Explode
-
-modifier ::= Explode. {
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .exploding)
-}
-modifier ::= Explode compare_point(cp).  {
-    return Modifiers.Explode(comparison: cp, format: .exploding)
-}
-modifier ::= Compound. {
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .compounding)
-}
-modifier ::= Compound compare_point(cp). {
-    return Modifiers.Explode(comparison: cp, format: .compounding)
-}
-modifier ::= Penetrate. {
-    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
-    return Modifiers.Explode(comparison: cp, format: .penetrating)
-}
-modifier ::= Penetrate compare_point(cp). {
-    return Modifiers.Explode(comparison: cp, format: .penetrating)
-}
-
 // Target
 
-modifier ::= compare_point(cp). {
-    return Modifiers.Success(comparison: cp)
-}
 modifier_list ::= compare_point(scp) Fail compare_point(fcp). {
     return [
         Modifiers.Success(comparison: scp),
         Modifiers.Failure(comparison: fcp)
     ]
 }
+modifier ::= compare_point(cp). {
+    return Modifiers.Success(comparison: cp)
+}
 
 // Keep/Drop
 
-modifier ::= KeepHigh. {
-    return Modifiers.Keep(high: true, count: 1)
-}
 modifier ::= KeepHigh Integer(a). {
     return Modifiers.Keep(high: true, count: a.token.value)
+}
+modifier ::= KeepHigh. {
+    return Modifiers.Keep(high: true, count: 1)
 }
 modifier ::= KeepLow Integer(a). {
     return Modifiers.Keep(high: false, count: a.token.value)
 }
+modifier ::= KeepLow. {
+    return Modifiers.Keep(high: false, count: 1)
+}
 
+modifier ::= DropLow Integer(a). {
+    return Modifiers.Drop(high: false, count: a.token.value)
+}
 modifier ::= DropLow. {
     return Modifiers.Drop(high: false, count: 1)
 }
 modifier ::= DropHigh Integer(a). {
     return Modifiers.Drop(high: true, count: a.token.value)
 }
-modifier ::= DropLow Integer(a). {
-    return Modifiers.Drop(high: false, count: a.token.value)
+modifier ::= DropHigh. {
+    return Modifiers.Drop(high: true, count: 1)
 }
 
 // Min/Max
@@ -165,17 +113,17 @@ modifier ::= Max Integer(a). {
 
 // Reroll
 
-modifier ::= Reroll. {
-    return Modifiers.Reroll()
-}
 modifier ::= Reroll compare_point(cp). {
     return Modifiers.Reroll(comparison: cp)
 }
-modifier ::= RerollOnce. {
-    return Modifiers.Reroll(once: true)
+modifier ::= Reroll. {
+    return Modifiers.Reroll()
 }
 modifier ::= RerollOnce compare_point(cp). {
     return Modifiers.Reroll(once: true, comparison: cp)
+}
+modifier ::= RerollOnce. {
+    return Modifiers.Reroll(once: true)
 }
 
 // Criticals
@@ -194,6 +142,60 @@ modifier ::= SortAscending. {
 }
 modifier ::= SortDescending. {
     return Modifiers.Sorting(ascending: false)
+}
+
+// Explode
+
+modifier ::= Explode compare_point(cp).  {
+    return Modifiers.Explode(comparison: cp, format: .exploding)
+}
+modifier ::= Explode. {
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .exploding)
+}
+modifier ::= Compound compare_point(cp). {
+    return Modifiers.Explode(comparison: cp, format: .compounding)
+}
+modifier ::= Compound. {
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .compounding)
+}
+modifier ::= Penetrate compare_point(cp). {
+    return Modifiers.Explode(comparison: cp, format: .penetrating)
+}
+modifier ::= Penetrate. {
+    let cp = ComparisonPoint(comparison: .maxRoll, value: currentDieMax)
+    return Modifiers.Explode(comparison: cp, format: .penetrating)
+}
+
+
+// Dice
+
+%nonterminal_type dice Dice
+
+dice ::= StandardDie(d). {
+    currentDieMax = d.token.sides
+    return .standard(sides: d.token.sides, count: d.token.count)
+}
+dice ::= PercentageDie(d). {
+    currentDieMax = 100
+    return .percent(count: d.token.value)
+}
+dice ::= FudgeDie(d). {
+    currentDieMax = 1
+    return .fate(lowProbability: d.token.lowFate, count: d.token.count)
+}
+
+
+// Rolls (dice + modifiers)
+
+%nonterminal_type roll Roll
+
+roll ::= dice(d) modifier_list(mods). {
+    return Roll(dice: d, modifiers: mods)
+}
+roll ::= dice(d). {
+    return Roll(dice: d)
 }
 
 
