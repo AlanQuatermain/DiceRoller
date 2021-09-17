@@ -27,16 +27,11 @@
 
     comparisons = [
         ("=", ".equal", "EqualTo"),
-        ("!=", ".notEqual", "NotEqualTo"),
-        ("<>", ".notEqual", "AlternateNotEqualTo"),
+        ("<>", ".notEqual", "NotEqualTo"),
         (">", ".greater", "GreaterThan"),
         ("<", ".lesser", "LessThan"),
         (">=", ".greaterEqual", "GreaterThanOrEqual"),
         ("<=", ".lesserEqual", "LessThanOrEqual"),
-    ]
-
-    comparisonCapableModifiers = [
-
     ]
 
     keepDrop = [
@@ -172,4 +167,26 @@ class ParserTests: XCTestCase {
     }
 %   end
 % end
+
+    func testSuccessFailure() throws {
+        var expression: Expression
+        var scomparison: ComparisonPoint
+        var fcomparison: ComparisonPoint
+% for sop, sid, sname in comparisons:
+        scomparison = ComparisonPoint(comparison: ${sid}, value: 3)
+%   for fop, fid, fname in comparisons:
+        fcomparison = ComparisonPoint(comparison: ${fid}, value: 3)
+        expression = try roller.decodeExpression(from: "4d6${sop}3f${fop}3")
+        guard case let .roll(roll) = expression else {
+            XCTFail("Expected roll with Success and Failure modifiers from '4d6${sop}3f${fop}3' input")
+            return
+        }
+        XCTAssertEqual(roll.modifiers.count, 2, "Expected 3 modifiers from '4d6${sop}3f${fop}3'")
+        XCTAssertTrue(roll.modifiers.first is Modifiers.Success)
+        XCTAssertEqual((roll.modifiers.first as? Modifiers.Success)?.comparison, scomparison)
+        XCTAssertTrue(roll.modifiers.last is Modifiers.Failure)
+        XCTAssertEqual((roll.modifiers.last as? Modifiers.Failure)?.comparison, fcomparison)
+%   end
+% end
+    }
 }

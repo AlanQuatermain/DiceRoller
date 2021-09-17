@@ -126,7 +126,7 @@ let lexingRules: [Rule] = [
     // Comparison Points
 
     Rule.string("=",  (.comparator, .Equal)),
-    Rule.string("!=", (.comparator, .NotEqual)),
+//    Rule.string("!=", (.comparator, .NotEqual)), // SO MANY PRECEDENCE PROBLEMS !!
     Rule.string("<>", (.comparator, .NotEqual)),
     Rule.string(">=", (.comparator, .GreaterEqual)),
     Rule.string("<=", (.comparator, .LesserEqual)),
