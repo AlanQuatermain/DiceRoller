@@ -13,6 +13,7 @@ class ErrorReporter {
     var output: TextOutputStream
     var endOfInputPosition: CitronLexerPosition?
     var isErrorReportedAtEnd: Bool = false
+    var errorMessages: [String.Index: String] = [:]
 
     init(input: String, output: TextOutputStream) {
         self.inputString = input
@@ -141,10 +142,16 @@ extension ErrorReporter {
     }
 
     func croak(_ message: String, at position: CitronLexerPosition) {
-        output.write("Error: \(message).")
+        var str = ""
+
+        str.append("Error: \(message).\n")
         let column = inputString.distance(from: inputString.startIndex, to: position.tokenPosition)
         let padding = String(repeating: " ", count: column)
-        output.write(inputString)
-        output.write("\(padding)^")
+        str.append(inputString + "\n")
+        str.append("\(padding)^")
+
+        output.write(str)
+
+        self.errorMessages[position.tokenPosition] = str
     }
 }

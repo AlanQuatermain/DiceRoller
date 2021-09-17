@@ -11,13 +11,8 @@ final class DiceRollerTests: XCTestCase {
         }
         catch let err as DiceRoller.Error {
             switch err {
-            case .tokenizationError(let pos):
-                let width = input.distance(from: input.startIndex, to: pos)
-                let padding = String(repeating: " ", count: width)
-                print(input)
-                print("\(padding)^")
-            case .unexpectedToken(let info):
-                print("unexpected token: \(info)")
+            case .tokenizationError(_, let str):
+                print(str)
             case .unexpectedEOF:
                 print("unexpected EOF")
             case .unknown(let e):
