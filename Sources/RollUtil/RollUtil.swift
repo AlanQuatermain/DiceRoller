@@ -22,6 +22,9 @@ struct Roll: ParsableCommand {
     @Flag(name: .shortAndLong, help: "Output the parsed expression tree in Lisp-like notation.")
     var debug = false
 
+    @Flag(name: .shortAndLong, help: "Print out the probability of each raw dice roll.")
+    var showProbability = false
+
     @Argument(help: "The dice expression.")
     var expression: String
 
@@ -39,6 +42,17 @@ struct Roll: ParsableCommand {
         case .short: print(value)
         case .regular: print("\(rolled.description) = \(value)")
         case .verbose: print("\(expr.description): \(rolled.description) = \(value)")
+        }
+
+        guard showProbability else { return }
+
+        for roll in expr.collectDice() {
+            let probabilities = roll.dice.probabilities()
+                .mapValues { String(format: "%.2g%%", $0 * 100) }
+            print("\n\(roll.dice) Probabilities:")
+            roll.dice.rollRange.forEach {
+                print("  \($0)\t\(probabilities[$0]!)")
+            }
         }
     }
 }

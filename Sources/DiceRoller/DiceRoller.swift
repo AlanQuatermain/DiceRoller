@@ -38,6 +38,25 @@ extension Expression {
         }
     }
 
+    /// Obtains all dice rolls in the expression tree, in order.
+    ///
+    /// - Returns: An array of `Roll` instances describing
+    /// the pending rolls contained within this expression.
+    public func collectDice() -> [Roll] {
+        switch self {
+        case .number, .error, .result:
+            return []
+        case let .roll(roll):
+            return [roll]
+        case let .braced(expr):
+            return expr.collectDice()
+        case let .addition(lhs, rhs), let .subtraction(lhs, rhs),
+            let .multiplication(lhs, rhs), let .division(lhs, rhs),
+            let .modulus(lhs, rhs), let .power(lhs, rhs):
+            return lhs.collectDice() + rhs.collectDice()
+        }
+    }
+
     /// Obtains the content of all `.result` expressions in the tree
     /// rooted at this expression, in order.
     ///

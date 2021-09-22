@@ -25,17 +25,30 @@ fileprivate func pow<T: BinaryInteger>(_ base: T, _ power: T) -> T {
     return expBySq(1, base, power)
 }
 
+/// A single parsed expression, whether a roll, an integer, or an
+/// arithmetic operation.
 public enum Expression {
+    /// A static number.
     case number(Int)
+    /// A roll of dice.
     case roll(Roll)
+    /// The result of a roll, calculated by calling `Expression.rolled()`.
     case result([RollResult])
+    /// An addition operation between the results of two expressions.
     indirect case addition(Expression, Expression)
+    /// A subtraction operation between the results of two expressions.
     indirect case subtraction(Expression, Expression)
+    /// A multiplication operation between the results of two expressions.
     indirect case multiplication(Expression, Expression)
+    /// A division operation between the results of two expressions.
     indirect case division(Expression, Expression)
+    /// A modulus (remainder) operation between the results of two expressions.
     indirect case modulus(Expression, Expression)
+    /// A power (index) operation between the results of two expressions.
     indirect case power(Expression, Expression)
+    /// A single braced (parenthesized) expression.
     indirect case braced(Expression)
+    /// A parser error.
     indirect case error(Error, Expression?)
 }
 
@@ -71,6 +84,15 @@ extension Expression: Equatable {
 }
 
 extension Expression: CustomStringConvertible {
+    /// A description of the expression, suitable for printing.
+    ///
+    /// For an un-rolled expression, this will generate a string
+    /// similar to the parser input; it will contain any defaults for
+    /// optional values understood by any modifiers used.
+    ///
+    /// For a rolled expression, this will show the values of results
+    /// in a bracketed list with modifier flags applied, e.g.
+    /// `[4!d, 5, 1d, 3d]`.
     public var description: String {
         switch self {
         case let .number(v):
@@ -100,6 +122,8 @@ extension Expression: CustomStringConvertible {
 }
 
 extension Expression: CustomDebugStringConvertible {
+    /// Prints out the expression tree rooted at this expression in a
+    /// Lisp-style format.
     public var debugDescription: String {
         switch self {
         case .number, .roll, .result:
@@ -125,6 +149,8 @@ extension Expression: CustomDebugStringConvertible {
 }
 
 extension Expression: Calculable {
+    /// Computes the final value of a roll, combining values for any dice
+    /// and applying all arithmetic modifiers.
     public var computedValue: Int {
         switch self {
         case let .number(v):

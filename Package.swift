@@ -42,6 +42,6 @@ let package = Package(
         .testTarget(
             name: "DiceRollerTests",
             dependencies: ["DiceRoller"],
-            exclude: ["ComparisonTests.swift.gyb"]),
+            exclude: ["ComparisonTests.swift.gyb", "ParserTests.swift.gyb"]),
     ]
 )
