@@ -4,12 +4,12 @@ import XCTest
 final class DiceRollerTests: XCTestCase {
     func testExample() throws {
         let input = "5d5>3"
-        let roller = DiceRoller()
+        let roller = Roller()
         do {
             let (parsed, rolled, result) = try roller.parse(input: input)
             print("\n    \(parsed): \(rolled) = \(result)\n")
         }
-        catch let err as DiceRoller.Error {
+        catch let err as Roller.Error {
             switch err {
             case .tokenizationError(_, let str):
                 print(str)

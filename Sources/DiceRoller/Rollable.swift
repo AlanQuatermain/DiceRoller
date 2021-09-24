@@ -8,9 +8,6 @@
 import RealModule
 import Darwin
 
-/// A method that acts like a die roll, producing a single value.
-public typealias Roller = () -> Int
-
 /// Represents the different dice understood by this library.
 public enum Dice {
     /// A standard die with numbered sides in the range `1...sides`.
@@ -161,7 +158,7 @@ public struct Roll {
     /// Any modifiers to apply to the output of the roll.
     public var modifiers: [Modifier]
 
-    /// Creates a new `Roll` of the given dice, with specifiec modifiers.
+    /// Creates a new `Roll` of the given dice, with specific modifiers.
     ///
     /// - Parameters:
     ///   - dice: The dice to roll.

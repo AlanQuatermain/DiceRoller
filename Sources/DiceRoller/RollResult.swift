@@ -28,7 +28,7 @@ public struct RollResult: Calculable {
 
     /// Defines the type of roll being made; a numeric value or a
     /// per-die success/failure condition.
-    enum TargetCriteria {
+    public enum TargetCriteria {
         /// This die represents a single success (logically +1).
         case success
         /// This die represents a single failure (logically -1).
@@ -40,7 +40,7 @@ public struct RollResult: Calculable {
     }
 
     /// The type of roll represented by this `RollResult`.
-    var criteria: TargetCriteria = .value
+    public internal(set) var criteria: TargetCriteria = .value
 
     /// The computed value of this die roll.
     ///
@@ -72,7 +72,7 @@ public struct RollResult: Calculable {
     /// indicated which modifiers applied. For example, a `"!"`
     /// indicates that the die exploded, or an `"r"` indicates it was
     /// re-rolled.
-    var modifierFlags: String {
+    public var modifierFlags: String {
         modifiers.map { $0.flag }.joined()
     }
 }

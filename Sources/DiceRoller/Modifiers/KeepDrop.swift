@@ -42,7 +42,7 @@ extension Modifiers {
         /// The relative ordering of this modifier.
         public var order: Int { 5 }
 
-        /// Whether we are keeping high or low rolls.
+        /// Whether we are keeping high (the default) or low rolls.
         public var high: Bool
         /// The number of rolls to keep.
         public var count: Int
@@ -58,6 +58,15 @@ extension Modifiers {
             self.count = count
         }
 
+        private var sortFunction: (RollResult, RollResult) -> Bool {
+            if high {
+                return { $0 < $1 }
+            }
+            else {
+                return { $0 > $1 }
+            }
+        }
+
         /// Applies the effects of the modifier to the results of a roll.
         ///
         /// - Parameter results: A sequence of `RollResult` instances,
@@ -66,7 +75,7 @@ extension Modifiers {
         /// dice (unused in this modifier).
         public func run<R>(for results: R, using roll: () -> Int) -> [RollResult] where R : Sequence, R.Element == RollResult {
             var output = Array(results)
-            for index in output.minIndices(count: output.count - count, sortedBy: <) {
+            for index in output.minIndices(count: output.count - count, sortedBy: sortFunction) {
                 output[index].dropped = true
                 output[index].modifiers.append(self)
             }
@@ -104,6 +113,15 @@ extension Modifiers {
             self.count = count
         }
 
+        private var sortFunction: (RollResult, RollResult) -> Bool {
+            if high {
+                return { $0 > $1 }
+            }
+            else {
+                return { $0 < $1 }
+            }
+        }
+
         /// Applies the effects of the modifier to the results of a roll.
         ///
         /// - Parameter results: A sequence of `RollResult` instances,
@@ -114,7 +132,7 @@ extension Modifiers {
         ///   die roll.
         public func run<R>(for results: R, using roll: () -> Int) -> [RollResult] where R : Sequence, R.Element == RollResult {
             var output = Array(results)
-            for index in output.minIndices(count: count, sortedBy: <) {
+            for index in output.minIndices(count: count, sortedBy: sortFunction) {
                 output[index].dropped = true
                 output[index].modifiers.append(self)
             }

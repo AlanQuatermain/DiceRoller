@@ -85,7 +85,7 @@ extension Expression {
 /// and most direct route is to provide a dice expression as a `String`. This
 /// class encapsulates the dice expression parser and rolls for you, providing
 /// results in a variety of different formats.
-public class DiceRoller {
+public class Roller {
     /// Errors that may occur while parsing.
     public enum Error: Swift.Error {
         /// An error occurred parsing the string; an unexpected character was encountered.
@@ -106,9 +106,12 @@ public class DiceRoller {
         }
     }
 
+    /// Provides a means to capture the output of any parsing errors.
+    ///
+    /// By default this writes to standard output.
     public var output: TextOutputStream = StdOutStream()
 
-    /// Create a new `DiceRoller` instance.
+    /// Create a new `Roller` instance.
     public init() {}
 
     /// Parses an input string into an expression tree.
@@ -184,7 +187,7 @@ public class DiceRoller {
     /// and [Roll20](https://roll20.net).
     ///
     /// For example:
-    /// ```
+    /// ```swift
     /// let input, rolled, value = roller.parse(input: "4d6k+3")
     /// print("\(input): \(rolled) = \(value)")
     /// ```

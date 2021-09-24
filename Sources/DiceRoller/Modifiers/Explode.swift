@@ -100,7 +100,7 @@ extension Modifiers {
         ///   rolls.
         public func run<R>(
             for results: R,
-            using roller: Roller
+            using roller: () -> Int
         ) -> [RollResult] where R : Sequence, R.Element == RollResult {
             switch format {
             case .exploding:
@@ -120,7 +120,7 @@ extension Modifiers {
         ///   - roller: A function that will produce a new roll.
         ///   - subtract: An optional value to subtract from new rolls.
         /// - Returns: An array of `RollResult` instances containing the results.
-        private func explode(roll: RollResult, using roller: Roller, subtract: Int = 0) -> [RollResult] {
+        private func explode(roll: RollResult, using roller: () -> Int, subtract: Int = 0) -> [RollResult] {
             guard comparison.compare(roll.value) else {
                 return [roll]
             }
@@ -151,7 +151,7 @@ extension Modifiers {
         ///   - roll: A single `RollResult` to evaluate.
         ///   - roller: A function that will produce a new roll.
         /// - Returns: An array of `RollResult` instances containing the results.
-        private func compound(roll: RollResult, using roller: Roller) -> [RollResult] {
+        private func compound(roll: RollResult, using roller: () -> Int) -> [RollResult] {
             var rolled = roll.value
             var total = rolled
             var iterations = 0
@@ -175,7 +175,7 @@ extension Modifiers {
         ///   - roll: A single `RollResult` to evaluate.
         ///   - roller: A function that will produce a new roll.
         /// - Returns: An array of `RollResult` instances containing the results.
-        private func penetrate(roll: RollResult, using roller: Roller) -> [RollResult] {
+        private func penetrate(roll: RollResult, using roller: () -> Int) -> [RollResult] {
             explode(roll: roll, using: roller, subtract: 1)
         }
     }

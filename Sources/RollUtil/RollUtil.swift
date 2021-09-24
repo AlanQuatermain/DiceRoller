@@ -29,7 +29,7 @@ struct Roll: ParsableCommand {
     var expression: String
 
     func run() throws {
-        let roller = DiceRoller()
+        let roller = Roller()
         let expr = try roller.decodeExpression(from: expression)
         let rolled = expr.rolled()
         let value = rolled.computedValue

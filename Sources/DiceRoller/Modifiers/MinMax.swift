@@ -43,7 +43,7 @@ extension Modifiers {
         /// A string describing the operator in terms that can be parsed by
         /// the dice roller, e.g. `"min3"`
         public var description: String {
-            "\(flag)\(value)"
+            "min\(value)"
         }
     }
 
@@ -84,7 +84,7 @@ extension Modifiers {
         /// A string describing this modifier in terms that can be parsed by
         /// the dice roller, e.g. `"max5"`.
         public var description: String {
-            "\(flag)\(value)"
+            "max\(value)"
         }
     }
 }

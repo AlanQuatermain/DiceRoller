@@ -34,7 +34,7 @@ public protocol Modifier: CustomStringConvertible {
     ///   dice, should the modifier require it (e.g. exploding or rerolling).
     /// - Returns: An array of `RollResults` representing the new state of the
     ///   die roll.
-    func run<R: Sequence>(for results: R, using roll: Roller) -> [RollResult] where R.Element == RollResult
+    func run<R: Sequence>(for results: R, using roll: () -> Int) -> [RollResult] where R.Element == RollResult
 }
 
 extension Modifier {

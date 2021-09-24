@@ -14,12 +14,13 @@ extension Modifiers {
         public var flag: String { "" }
         /// The relative ordering of this modifier.
         ///
-        /// `Sorting` always comes last.
-        public var order: Int { Int.max } // always last
+        /// `Sorting` usually comes last, though it is possible to assign a
+        /// later order to your custom modifiers.
+        public var order: Int { 100 } // usually last, ul
 
         /// Whether the values should be sorted in ascending or
         /// descending order.
-        let ascending: Bool
+        public let ascending: Bool
 
         /// Creates a new `Sorting` modifier.
         ///
