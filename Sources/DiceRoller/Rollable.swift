@@ -93,8 +93,13 @@ public enum Dice {
     ///
     /// - Note: Be warned that while this is accurate enough for most common cases,
     /// once you start passing in more than ten dice the algorithm will run up against
-    /// the limits of the `Float80` type used for computations internally.
+    /// the limits of the floating=point type used for computations internally.
     public func probabilities() -> [Int: Double] {
+        #if (arch(i386) || arch(x86_64)) && !os(Windows) && !os(Android)
+        typealias PrecisionFloat = Float80
+        #else
+        typealias PrecisionFloat = Double
+        #endif
         // Binomial coefficient:
         //      $\binom{n}{k} = \frac{n!}{k!(n-k)!}$
         //
@@ -103,17 +108,17 @@ public enum Dice {
         //  $P(p,n,s) = \frac{1}{s^n}\cdot\sum_{k=0}^{k_{max}}(-1)^k\binom{n}{k}\binom{p - s\cdot k - 1}{p - s\cdot k - n}$
         //
         //  where $k_{max} = \floor{\frac{p-n}{s}}$
-        func factorial(_ n: Int) -> Float80 {
-            func _fact(_ n: Float80) -> Float80 {
+        func factorial(_ n: Int) -> PrecisionFloat {
+            func _fact(_ n: PrecisionFloat) -> PrecisionFloat {
                 if n <= 1 {
                     return 1
                 }
                 return n * _fact(n-1)
             }
-            return _fact(Float80(n))
+            return _fact(PrecisionFloat(n))
         }
 
-        func binomial(n: Int, k: Int) -> Float80 {
+        func binomial(n: Int, k: Int) -> PrecisionFloat {
             let nf = factorial(n)
             let kf = factorial(k)
             let nkf = factorial(n-k)
@@ -121,19 +126,19 @@ public enum Dice {
             return nf / (kf * nkf)
         }
 
-        func probability(p: Int, n: Int, s: Int) -> Float80 {
-            let _p = Float80(p)
-            let _n = Float80(n)
-            let _s = Float80(s)
+        func probability(p: Int, n: Int, s: Int) -> PrecisionFloat {
+            let _p = PrecisionFloat(p)
+            let _n = PrecisionFloat(n)
+            let _s = PrecisionFloat(s)
 
-            let stoN = Float80.pow(_s, _n)
-            let oneOverStoN = Float80(1) / stoN
+            let stoN = PrecisionFloat.pow(_s, _n)
+            let oneOverStoN = PrecisionFloat(1) / stoN
 
             let kMax = Int(floorl((_p - _n) / _s))
             let sum = (0...kMax).lazy
-                .map { (k: Int) -> Float80 in
+                .map { (k: Int) -> PrecisionFloat in
                     let sk = s*k
-                    let kp = Float80.pow(-1.0, k)
+                    let kp = PrecisionFloat.pow(-1.0, k)
                     let b1 = binomial(n: n, k: k)
                     let b2 = binomial(n: p-sk-1, k: p-sk-n)
                     return kp * b1 * b2
